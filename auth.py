@@ -30,7 +30,7 @@ _ensure_user_hashes()
 
 
 def get_user(username: str) -> Optional[Dict[str, str]]:
-    return _USERS.get(username)
+    return _USERS.get(username.lower())
 
 
 def verify_password(password: str, salt: str, expected_hash: str) -> bool:
@@ -39,6 +39,10 @@ def verify_password(password: str, salt: str, expected_hash: str) -> bool:
 
 
 def authenticate_user(username: str, password: str) -> Optional[Dict[str, str]]:
+    username = (username or "").strip().lower()
+    password = password or ""
+    if not username or len(password) < 6:
+        return None
     user = get_user(username)
     if not user:
         return None
