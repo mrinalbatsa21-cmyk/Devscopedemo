@@ -1,5 +1,7 @@
 from flask import Flask, redirect, render_template_string, request, session, url_for
 
+from auth import authenticate_user
+
 app = Flask(__name__)
 app.secret_key = "devscope-sample-secret"
 
@@ -14,8 +16,9 @@ def login():
     if request.method == "POST":
         username = request.form.get("username", "").strip()
         password = request.form.get("password", "")
-        if username == "demo" and password == "demo123":
-            session["user"] = {"username": username}
+        user = authenticate_user(username, password)
+        if user:
+            session["user"] = user
             return redirect(url_for("home"))
         return render_template_string("<p>Invalid credentials</p>"), 401
 
