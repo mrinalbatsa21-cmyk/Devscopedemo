@@ -1,6 +1,6 @@
 from flask import Flask, redirect, render_template_string, request, session, url_for
 
-from auth import authenticate_user
+from auth import authenticate_user, login_required
 
 app = Flask(__name__)
 app.secret_key = "devscope-sample-secret"
@@ -9,6 +9,20 @@ app.secret_key = "devscope-sample-secret"
 @app.get("/")
 def home():
     return "DevScope sample app is running"
+
+
+@app.get("/dashboard")
+@login_required
+def dashboard():
+    user = session.get("user", {})
+    return render_template_string(
+        """
+        <h2>Developer Dashboard</h2>
+        <p>Welcome, {{ name }}</p>
+        <a href="{{ url_for('logout') }}">Sign out</a>
+        """,
+        name=user.get("full_name", user.get("username", "User")),
+    )
 
 
 @app.route("/login", methods=["GET", "POST"])
