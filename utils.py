@@ -83,7 +83,7 @@ def build_audit_entry(user: Dict[str, str], action: str) -> Dict[str, object]:
         "recorded_at": datetime.now(timezone.utc).isoformat(),
     }
 
-
+# Utility functions
 def normalize_preferences(data: Optional[Dict[str, object]]) -> Dict[str, object]:
     data = data or {}
     theme = (str(data.get("theme") or "light")).lower()
