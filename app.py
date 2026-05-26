@@ -27,6 +27,20 @@ def dashboard():
         <p>Last login: {{ metrics.last_login }}</p>
         <p>Session minutes: {{ metrics.session_minutes }}</p>
         <p>ActivityWatch queued at: {{ aw_payload.queued_at }}</p>
+        <button type="button" onclick="toggleIntel()">View task intelligence</button>
+        <div id="task-intel" style="display:none;border:1px solid #ddd;padding:10px;margin-top:10px;">
+            <h4>Task intelligence</h4>
+            <ul>
+                <li>Session minutes: {{ metrics.session_minutes }}</li>
+                <li>ActivityWatch queued: {{ aw_payload.queued_at }}</li>
+            </ul>
+        </div>
+        <script>
+        function toggleIntel() {
+            var panel = document.getElementById('task-intel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
+        </script>
         <a href="{{ url_for('logout') }}">Sign out</a>
         """,
         name=user.get("full_name", user.get("username", "User")),
