@@ -15,6 +15,7 @@ from utils import (
 
 app = Flask(__name__)
 app.secret_key = "devscope-sample-secret"
+APP_START = datetime.now(timezone.utc)
 
 
 @app.get("/")
@@ -121,6 +122,12 @@ def preferences():
         return {"status": "saved", "preferences": prefs}
     prefs = normalize_preferences(session.get("prefs"))
     return {"preferences": prefs}
+
+
+@app.get("/api/health")
+def health():
+    uptime_seconds = int((datetime.now(timezone.utc) - APP_START).total_seconds())
+    return {"status": "ok", "uptime_seconds": uptime_seconds, "timestamp": datetime.now(timezone.utc).isoformat()}
 
 
 @app.get("/api/status")
