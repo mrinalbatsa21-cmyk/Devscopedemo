@@ -65,6 +65,17 @@ def summarize_notifications(items: List[Dict[str, object]]) -> Dict[str, int]:
     return {"total": total, "unread": unread}
 
 
+def build_profile_payload(user: Dict[str, str]) -> Dict[str, object]:
+    username = user.get("username") or "unknown"
+    full_name = user.get("full_name") or username.title()
+    email = user.get("email") or f"{username}@example.com"
+    return {
+        "username": username,
+        "full_name": full_name,
+        "email": mask_email(email),
+    }
+
+
 def build_audit_entry(user: Dict[str, str], action: str) -> Dict[str, object]:
     return {
         "user": user.get("username") or "unknown",

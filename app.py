@@ -9,6 +9,7 @@ from utils import (
     build_api_fallback,
     build_dashboard_metrics,
     build_notification,
+    build_profile_payload,
     build_session_summary,
     format_timestamp,
     normalize_preferences,
@@ -127,6 +128,13 @@ def notifications_summary():
         build_notification(user, "New task assigned", "action"),
     ]
     return summarize_notifications(items)
+
+
+@app.get("/api/profile")
+@login_required
+def profile():
+    user = session.get("user", {})
+    return build_profile_payload(user)
 
 
 @app.get("/api/audit")
