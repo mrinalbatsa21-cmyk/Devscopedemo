@@ -139,5 +139,10 @@ def api_status():
     return {"status": "ok", "timestamp": datetime.now(timezone.utc).isoformat()}
 
 
+@app.get("/api/fallback/ping")
+def fallback_ping():
+    return build_api_fallback("ping", "manual")
+
+
 if __name__ == "__main__":
     app.run(debug=True)
