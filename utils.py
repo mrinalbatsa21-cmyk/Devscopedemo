@@ -64,7 +64,7 @@ def summarize_notifications(items: List[Dict[str, object]]) -> Dict[str, int]:
     unread = sum(1 for item in items if not item.get("read"))
     return {"total": total, "unread": unread}
 
-
+# Profile payload builder
 def build_profile_payload(user: Dict[str, str]) -> Dict[str, object]:
     username = user.get("username") or "unknown"
     full_name = user.get("full_name") or username.title()
@@ -74,7 +74,7 @@ def build_profile_payload(user: Dict[str, str]) -> Dict[str, object]:
         "full_name": full_name,
         "email": mask_email(email),
     }
-
+# Audit log entry builder
 
 def build_audit_entry(user: Dict[str, str], action: str) -> Dict[str, object]:
     return {
