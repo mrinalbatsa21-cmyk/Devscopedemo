@@ -71,13 +71,20 @@ def normalize_preferences(data: Optional[Dict[str, object]]) -> Dict[str, object
     return {"theme": theme, "refresh": refresh}
 
 
-def build_api_fallback(service: str, reason: str) -> Dict[str, object]:
-    return {
+def build_api_fallback(
+    service: str,
+    reason: str,
+    detail: Optional[str] = None,
+) -> Dict[str, object]:
+    payload = {
         "status": "fallback",
         "service": service or "unknown",
         "reason": reason or "unknown",
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
+    if detail:
+        payload["detail"] = detail
+    return payload
 
 
 def mask_email(email: str) -> str:

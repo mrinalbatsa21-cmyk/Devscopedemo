@@ -133,7 +133,9 @@ def health():
 @app.get("/api/status")
 def api_status():
     if request.args.get("fallback") == "1":
-        return build_api_fallback("status", "forced")
+        reason = request.args.get("reason") or "forced"
+        detail = request.args.get("detail")
+        return build_api_fallback("status", reason, detail)
     return {"status": "ok", "timestamp": datetime.now(timezone.utc).isoformat()}
 
 
