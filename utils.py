@@ -40,6 +40,15 @@ def build_activitywatch_payload(
     }
 
 
+def build_api_fallback(service: str, reason: str) -> Dict[str, object]:
+    return {
+        "status": "fallback",
+        "service": service or "unknown",
+        "reason": reason or "unknown",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
+
+
 def mask_email(email: str) -> str:
     if "@" not in email:
         return email

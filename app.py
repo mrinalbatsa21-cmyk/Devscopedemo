@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from flask import Flask, redirect, render_template_string, request, session, url_for
 
 from auth import authenticate_user, login_required
-from utils import build_activitywatch_payload, build_dashboard_metrics, format_timestamp
+from utils import build_activitywatch_payload, build_api_fallback, build_dashboard_metrics, format_timestamp
 
 app = Flask(__name__)
 app.secret_key = "devscope-sample-secret"
@@ -86,6 +86,13 @@ def activitywatch_upload():
     metrics = build_dashboard_metrics(session.get("login_at"))
     payload = build_activitywatch_payload(user, metrics)
     return {"status": "queued", "payload": payload}
+
+
+@app.get("/api/status")
+def api_status():
+    if request.args.get("fallback") == "1":
+        return build_api_fallback("status", "forced")
+    return {"status": "ok", "timestamp": datetime.now(timezone.utc).isoformat()}
 
 
 if __name__ == "__main__":
