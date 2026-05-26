@@ -40,6 +40,15 @@ def build_activitywatch_payload(
     }
 
 
+def build_session_summary(user: Dict[str, str], login_at: Optional[str]) -> Dict[str, object]:
+    metrics = build_dashboard_metrics(login_at)
+    return {
+        "user": user.get("username") or "unknown",
+        "last_login": metrics["last_login"],
+        "session_minutes": metrics["session_minutes"],
+    }
+
+
 def build_api_fallback(service: str, reason: str) -> Dict[str, object]:
     return {
         "status": "fallback",
