@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from typing import Optional
+from typing import Dict, Optional
 
 
 def format_timestamp(value: Optional[str]) -> str:
@@ -10,6 +10,19 @@ def format_timestamp(value: Optional[str]) -> str:
     except ValueError:
         return "—"
     return dt.astimezone(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+
+
+def build_dashboard_metrics(login_at: Optional[str]) -> Dict[str, object]:
+    last_login = format_timestamp(login_at)
+    session_minutes = 0
+    if login_at:
+        try:
+            dt = datetime.fromisoformat(login_at.replace("Z", "+00:00"))
+            delta = datetime.now(timezone.utc) - dt
+            session_minutes = max(0, int(delta.total_seconds() / 60))
+        except ValueError:
+            session_minutes = 0
+    return {"last_login": last_login, "session_minutes": session_minutes}
 
 
 def mask_email(email: str) -> str:
