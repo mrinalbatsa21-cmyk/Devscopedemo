@@ -49,6 +49,16 @@ def build_session_summary(user: Dict[str, str], login_at: Optional[str]) -> Dict
     }
 
 
+def build_notification(user: Dict[str, str], message: str, level: str = "info") -> Dict[str, object]:
+    return {
+        "user": user.get("username") or "unknown",
+        "message": message,
+        "level": level,
+        "read": False,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+
 def build_audit_entry(user: Dict[str, str], action: str) -> Dict[str, object]:
     return {
         "user": user.get("username") or "unknown",

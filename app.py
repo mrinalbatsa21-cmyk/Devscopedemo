@@ -8,6 +8,7 @@ from utils import (
     build_audit_entry,
     build_api_fallback,
     build_dashboard_metrics,
+    build_notification,
     build_session_summary,
     format_timestamp,
     normalize_preferences,
@@ -103,6 +104,17 @@ def session_summary():
     user = session.get("user", {})
     login_at = session.get("login_at")
     return build_session_summary(user, login_at)
+
+
+@app.get("/api/notifications")
+@login_required
+def notifications():
+    user = session.get("user", {})
+    items = [
+        build_notification(user, "Sprint review is scheduled", "info"),
+        build_notification(user, "New task assigned", "action"),
+    ]
+    return {"notifications": items}
 
 
 @app.get("/api/audit")
