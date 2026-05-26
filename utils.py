@@ -97,7 +97,7 @@ def normalize_preferences(data: Optional[Dict[str, object]]) -> Dict[str, object
     refresh = max(5, min(60, refresh))
     return {"theme": theme, "refresh": refresh}
 
-
+# API fallback builder
 def build_api_fallback(
     service: str,
     reason: str,
