@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from flask import Flask, redirect, render_template_string, request, session, url_for
 
 from auth import authenticate_user, login_required
-from utils import build_dashboard_metrics, format_timestamp
+from utils import build_activitywatch_payload, build_dashboard_metrics, format_timestamp
 
 app = Flask(__name__)
 app.secret_key = "devscope-sample-secret"
@@ -19,16 +19,19 @@ def home():
 def dashboard():
     user = session.get("user", {})
     metrics = build_dashboard_metrics(session.get("login_at"))
+    aw_payload = build_activitywatch_payload(user, metrics)
     return render_template_string(
         """
         <h2>Developer Dashboard</h2>
         <p>Welcome, {{ name }}</p>
         <p>Last login: {{ metrics.last_login }}</p>
         <p>Session minutes: {{ metrics.session_minutes }}</p>
+        <p>ActivityWatch queued at: {{ aw_payload.queued_at }}</p>
         <a href="{{ url_for('logout') }}">Sign out</a>
         """,
         name=user.get("full_name", user.get("username", "User")),
         metrics=metrics,
+        aw_payload=aw_payload,
     )
 
 
@@ -60,6 +63,15 @@ def login():
 def logout():
     session.pop("user", None)
     return redirect(url_for("home"))
+
+
+@app.post("/activitywatch")
+@login_required
+def activitywatch_upload():
+    user = session.get("user", {})
+    metrics = build_dashboard_metrics(session.get("login_at"))
+    payload = build_activitywatch_payload(user, metrics)
+    return {"status": "queued", "payload": payload}
 
 
 if __name__ == "__main__":

@@ -25,6 +25,21 @@ def build_dashboard_metrics(login_at: Optional[str]) -> Dict[str, object]:
     return {"last_login": last_login, "session_minutes": session_minutes}
 
 
+def build_activitywatch_payload(
+    user: Dict[str, str],
+    metrics: Optional[Dict[str, object]] = None,
+) -> Dict[str, object]:
+    username = user.get("username") or "unknown"
+    session_minutes = 0
+    if metrics and isinstance(metrics.get("session_minutes"), int):
+        session_minutes = metrics["session_minutes"]
+    return {
+        "user": username,
+        "queued_at": datetime.now(timezone.utc).isoformat(),
+        "session_minutes": session_minutes,
+    }
+
+
 def mask_email(email: str) -> str:
     if "@" not in email:
         return email
