@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 
 
 def format_timestamp(value: Optional[str]) -> str:
@@ -57,6 +57,12 @@ def build_notification(user: Dict[str, str], message: str, level: str = "info") 
         "read": False,
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
+
+
+def summarize_notifications(items: List[Dict[str, object]]) -> Dict[str, int]:
+    total = len(items)
+    unread = sum(1 for item in items if not item.get("read"))
+    return {"total": total, "unread": unread}
 
 
 def build_audit_entry(user: Dict[str, str], action: str) -> Dict[str, object]:

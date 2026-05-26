@@ -12,6 +12,7 @@ from utils import (
     build_session_summary,
     format_timestamp,
     normalize_preferences,
+    summarize_notifications,
 )
 
 app = Flask(__name__)
@@ -115,6 +116,17 @@ def notifications():
         build_notification(user, "New task assigned", "action"),
     ]
     return {"notifications": items}
+
+
+@app.get("/api/notifications/summary")
+@login_required
+def notifications_summary():
+    user = session.get("user", {})
+    items = [
+        build_notification(user, "Sprint review is scheduled", "info"),
+        build_notification(user, "New task assigned", "action"),
+    ]
+    return summarize_notifications(items)
 
 
 @app.get("/api/audit")
