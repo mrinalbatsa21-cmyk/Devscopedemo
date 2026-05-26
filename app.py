@@ -3,7 +3,12 @@ from datetime import datetime, timezone
 from flask import Flask, redirect, render_template_string, request, session, url_for
 
 from auth import authenticate_user, login_required
-from utils import build_activitywatch_payload, build_dashboard_metrics, format_timestamp
+from utils import (
+    build_activitywatch_payload,
+    build_dashboard_metrics,
+    build_github_link_payload,
+    format_timestamp,
+)
 
 app = Flask(__name__)
 app.secret_key = "devscope-sample-secret"
@@ -86,6 +91,16 @@ def activitywatch_upload():
     metrics = build_dashboard_metrics(session.get("login_at"))
     payload = build_activitywatch_payload(user, metrics)
     return {"status": "queued", "payload": payload}
+
+
+@app.post("/github/link")
+@login_required
+def github_link():
+    user = session.get("user", {})
+    data = request.get_json(silent=True) or {}
+    repo = data.get("repo") or request.form.get("repo") or ""
+    payload = build_github_link_payload(user, repo)
+    return {"status": "linked", "payload": payload}
 
 
 if __name__ == "__main__":

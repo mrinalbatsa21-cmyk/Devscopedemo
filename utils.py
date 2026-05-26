@@ -40,6 +40,16 @@ def build_activitywatch_payload(
     }
 
 
+def build_github_link_payload(user: Dict[str, str], repo: str) -> Dict[str, object]:
+    username = user.get("username") or "unknown"
+    repo_value = (repo or "").strip() or "unknown/repo"
+    return {
+        "user": username,
+        "repo": repo_value,
+        "linked_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+
 def mask_email(email: str) -> str:
     if "@" not in email:
         return email
