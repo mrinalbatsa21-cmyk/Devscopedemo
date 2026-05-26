@@ -49,6 +49,14 @@ def build_session_summary(user: Dict[str, str], login_at: Optional[str]) -> Dict
     }
 
 
+def build_audit_entry(user: Dict[str, str], action: str) -> Dict[str, object]:
+    return {
+        "user": user.get("username") or "unknown",
+        "action": action,
+        "recorded_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+
 def build_api_fallback(service: str, reason: str) -> Dict[str, object]:
     return {
         "status": "fallback",

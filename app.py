@@ -5,6 +5,7 @@ from flask import Flask, redirect, render_template_string, request, session, url
 from auth import authenticate_user, login_required
 from utils import (
     build_activitywatch_payload,
+    build_audit_entry,
     build_api_fallback,
     build_dashboard_metrics,
     build_session_summary,
@@ -100,6 +101,13 @@ def session_summary():
     user = session.get("user", {})
     login_at = session.get("login_at")
     return build_session_summary(user, login_at)
+
+
+@app.get("/api/audit")
+@login_required
+def audit_log():
+    user = session.get("user", {})
+    return {"events": [build_audit_entry(user, "view_dashboard")]}
 
 
 @app.get("/api/status")
