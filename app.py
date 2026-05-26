@@ -10,6 +10,7 @@ from utils import (
     build_dashboard_metrics,
     build_session_summary,
     format_timestamp,
+    normalize_preferences,
 )
 
 app = Flask(__name__)
@@ -108,6 +109,18 @@ def session_summary():
 def audit_log():
     user = session.get("user", {})
     return {"events": [build_audit_entry(user, "view_dashboard")]}
+
+
+@app.route("/api/preferences", methods=["GET", "POST"])
+@login_required
+def preferences():
+    if request.method == "POST":
+        incoming = request.get_json(silent=True) or request.form.to_dict()
+        prefs = normalize_preferences(incoming)
+        session["prefs"] = prefs
+        return {"status": "saved", "preferences": prefs}
+    prefs = normalize_preferences(session.get("prefs"))
+    return {"preferences": prefs}
 
 
 @app.get("/api/status")

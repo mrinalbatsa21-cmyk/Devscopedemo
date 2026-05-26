@@ -57,6 +57,20 @@ def build_audit_entry(user: Dict[str, str], action: str) -> Dict[str, object]:
     }
 
 
+def normalize_preferences(data: Optional[Dict[str, object]]) -> Dict[str, object]:
+    data = data or {}
+    theme = (str(data.get("theme") or "light")).lower()
+    if theme not in {"light", "dark", "system"}:
+        theme = "light"
+    refresh = data.get("refresh")
+    try:
+        refresh = int(refresh)
+    except (TypeError, ValueError):
+        refresh = 15
+    refresh = max(5, min(60, refresh))
+    return {"theme": theme, "refresh": refresh}
+
+
 def build_api_fallback(service: str, reason: str) -> Dict[str, object]:
     return {
         "status": "fallback",
