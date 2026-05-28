@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from typing import Dict, List, Optional
 
-
+#functions starting from here
 def format_timestamp(value: Optional[str]) -> str:
     if not value:
         return "—"
